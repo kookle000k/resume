@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta name="robots" content="noindex, nofollow">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>김창현 | 이력서 & 경력기술서</title>
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text x=%2250%%22 y=%2250%%22 dominant-baseline=%22central%22 text-anchor=%22middle%22 font-size=%2280%22>⭐</text></svg>">
+
+    <!-- 필수 라이브러리 (React & 스타일링) -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- 별도 분리된 데이터 로드 -->
+    <!-- <script src="data.js"></script> -->
+    <script src="https://kookle000k.github.io/resume/data.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+
+    <style type="text/tailwindcss">
+        /* 1. Layout & Base */
+        * { -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Noto Sans KR', sans-serif; @apply bg-[#f1f5f9] text-[#1e293b] antialiased md:py-12; }
+        .main-card { @apply max-w-4xl mx-auto bg-white shadow-2xl rounded-none md:rounded-2xl md:overflow-hidden transition-all duration-500 relative; }
+        .content-area { @apply pt-10 pb-16 px-6 md:px-16 space-y-16; }
+
+        /* 2. Header Section */
+        .resume-header { @apply bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#334155] text-white pt-12 pb-10 px-8 md:px-16 relative overflow-hidden; }
+        .header-container { @apply flex flex-col md:flex-row justify-between items-start gap-10 w-full; }
+        .resume-header::after { content: ''; @apply absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full -mr-20 -mt-20 blur-3xl; }
+        .resume-name { @apply text-4xl md:text-6xl font-bold tracking-widest uppercase mt-2; }
+        .resume-tagline { @apply text-lg md:text-xl text-blue-200 mt-6 font-light leading-relaxed; }
+        .contact-info { @apply flex flex-col gap-6 text-sm text-slate-300 z-10 self-end md:self-auto; }
+        .contact-group { @apply space-y-2 flex flex-col items-start w-full; }
+        .contact-item { @apply flex items-center gap-3 transition-colors hover:text-white; }
+        .contact-link { @apply flex items-center gap-3 md:hover:text-blue-300 transition-colors bg-transparent border-none p-0 text-left cursor-pointer focus:outline-none focus:ring-0; }
+        .contact-icon-v { @apply w-4 h-4 text-blue-400; }
+        .link-group { @apply pt-4 border-t border-white/10 grid grid-cols-2 gap-x-4 md:gap-x-12 gap-y-3; }
+
+        /* 3. Common Components */
+        .section-container { @apply space-y-6; }
+        .title-with-bar { @apply font-extrabold text-slate-800 flex items-center gap-3; }
+        .title-with-bar::before { content: ''; @apply w-2 h-8 bg-blue-600 rounded-full shrink-0; }
+        
+        .section-title { @apply title-with-bar text-2xl pb-2 border-b-2 border-slate-100 w-full; }
+        .summary-content { @apply text-slate-600 leading-loose text-lg font-normal space-y-4; }
+
+        /* 4. Core Skills */
+        .skills-grid { @apply grid grid-cols-1 md:grid-cols-3 gap-6; }
+        .skill-group { @apply space-y-4 p-5 rounded-xl bg-slate-50 border border-slate-100 transition-all hover:shadow-md hover:-translate-y-1; }
+        .skill-cat-header { @apply font-bold text-slate-800 flex items-center gap-2 mb-3; }
+        .skill-tag-container { @apply flex flex-wrap gap-2; }
+        .tag-base { @apply px-2 py-1 rounded font-bold border transition-all; }
+        .skill-tag { @apply tag-base px-3 bg-white text-slate-600 text-xs border-slate-200 shadow-sm hover:border-blue-300 hover:text-blue-600; }
+
+        /* 5. Experience & Timeline Items */
+        .timeline-dot, .exp-dot { @apply absolute left-[-9px] top-1.5 w-4 h-4 rounded-full bg-white border-4 border-blue-500 shadow-sm; }
+        .exp-list { @apply space-y-12; }
+        .exp-item { @apply relative pl-8 border-l-2 border-slate-100 pb-2 last:pb-0; }
+        .exp-header { @apply flex flex-col md:flex-row justify-between items-start gap-2; }
+        .exp-company { @apply text-xl font-bold text-slate-900; }
+        .exp-role { @apply text-blue-600 font-semibold text-lg; }
+        .exp-period { @apply text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wider; }
+        .exp-period.current { @apply bg-blue-100 text-blue-700; }
+        .exp-period.past { @apply bg-slate-100 text-slate-500; }
+        .exp-details-list { @apply mt-5 space-y-4 text-slate-600; }
+        .exp-detail-item { @apply flex gap-3 leading-relaxed; }
+        .bullet-check, .exp-check-icon, .result-bullet { @apply text-blue-500 font-bold mt-1 shrink-0; }
+
+        /* 6. Career Detail Components */
+        .career-company-section { @apply relative; }
+        .career-company-header { @apply relative md:sticky top-0 bg-white md:bg-white/80 md:backdrop-blur-sm z-20 py-4 mb-10 flex flex-col md:flex-row md:items-baseline justify-between border-b-2 border-slate-100; }
+        .career-company-period { @apply text-slate-400 font-mono text-sm; }
+        .career-section-title { @apply title-with-bar text-2xl md:text-3xl pb-2; }
+        
+        .project-item { @apply relative pl-8 border-l-2 border-slate-100 mb-16 last:mb-0; }
+        .project-item::before { @apply timeline-dot; content: ''; }
+        
+        .project-header { @apply flex flex-col md:flex-row md:items-baseline justify-between gap-2 mb-4; }
+        .project-title { @apply text-xl font-bold text-slate-800 mb-0 flex items-center gap-3; }
+        .project-role { @apply text-blue-600 font-semibold text-sm mb-0 bg-blue-50 px-3 py-1 rounded-md inline-block whitespace-nowrap focus:outline-none focus:ring-0 shrink-0; }
+        .project-tech-container { @apply flex flex-wrap gap-2 mb-6; }
+        .project-tech-tag { @apply tag-base bg-slate-100 text-slate-600 text-[11px] border-slate-200; }
+        .project-description { @apply text-slate-600 leading-relaxed mb-6 bg-slate-50 p-4 rounded-lg border-l-4 border-slate-200; }
+        .project-results { @apply space-y-3; }
+        .result-item { @apply flex gap-3 text-slate-600 leading-relaxed text-[15px]; }
+
+        /* 7. Previous Careers & Education */
+        .prev-exp-card { @apply bg-slate-50 text-slate-500 p-6 rounded-xl border border-slate-100; }
+        .prev-exp-title { @apply text-lg font-bold text-slate-400 mb-6 flex items-center gap-2; }
+        .prev-exp-icon { @apply text-slate-300; }
+        .prev-exp-list { @apply space-y-4; }
+        .prev-exp-item { @apply flex flex-col md:flex-row md:justify-between md:items-center gap-2 border-b border-slate-200/50 pb-3 last:border-0 last:pb-0; }
+        .prev-exp-info { @apply text-slate-500 text-sm; }
+        .prev-exp-company { @apply text-slate-700 font-medium block md:inline; }
+        .prev-exp-detail { @apply text-slate-400 text-sm italic block md:inline md:ml-2; }
+        .prev-exp-period { @apply text-slate-400 font-mono text-xs; }
+        
+        .edu-cert-grid { @apply grid grid-cols-1 md:grid-cols-2 gap-12; }
+        .edu-list { @apply space-y-4; }
+        .edu-item { @apply flex justify-between items-baseline p-3 bg-slate-50 rounded-lg; }
+        .edu-school { @apply font-bold text-slate-800; }
+        .edu-major { @apply text-slate-500 text-sm; }
+        .cert-container { @apply flex flex-wrap gap-2 pt-2; }
+        .cert-tag { @apply px-4 py-2 bg-blue-50 text-blue-700 rounded-xl text-xs font-bold border border-blue-100 shadow-sm; }
+
+        /* 8. Footer Section */
+        .footer-action { @apply py-12 px-10 bg-slate-50 border-t border-slate-100 text-center; }
+        .footer-quote { @apply text-slate-400 text-sm italic mb-0; }
+        .print-info-container { @apply hidden print:flex items-center justify-center gap-8 mt-6 border-t border-slate-100 pt-8 text-left max-w-2xl mx-auto; }
+        .print-info-text { @apply flex-1; }
+        .print-notice-title { @apply font-semibold text-slate-500 mb-1; }
+        .print-link { @apply text-blue-500 underline; }
+        .qr-code-box { @apply w-24 h-24; }
+        .qr-img { @apply w-full h-full; }
+        .footer-copyright { @apply p-16 text-center text-slate-400 text-sm border-t border-slate-100; }
+
+        /* 9. Navigation & Actions */
+        .nav-actions { @apply fixed bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 flex gap-2 md:gap-4 z-50 no-print w-[90%] md:w-auto justify-center; }
+        .btn-nav { @apply bg-white text-slate-700 px-4 py-1.5 md:px-6 md:py-2 rounded-full font-bold shadow-xl border-2 border-slate-200 flex items-center gap-2 md:hover:text-blue-600 md:hover:border-blue-500 transition-all active:scale-95 text-xs md:text-base whitespace-nowrap focus:outline-none focus:ring-0; }
+        .btn-nav-primary { @apply bg-white text-blue-600 px-4 py-1.5 md:px-6 md:py-2 rounded-full font-bold shadow-xl border-2 border-blue-500 flex items-center gap-2 md:hover:bg-blue-50 transition-all active:scale-95 text-xs md:text-base whitespace-nowrap focus:outline-none focus:ring-0; }
+
+        /* 10. Status Screen */
+        .status-screen { @apply text-center px-10 py-20; }
+        .status-icon { @apply w-12 h-12 text-red-500 mb-2 mx-auto; }
+        .status-text-error { @apply text-red-500 font-bold; }
+        .status-text-desc { @apply text-slate-400 text-sm mt-2; }
+
+        .intro-subtitle { @apply text-xl font-bold text-blue-600 mb-4 leading-tight; }
+        .intro-text { @apply text-slate-600 leading-loose text-[16px] whitespace-pre-line; }
+        .intro-body { @apply space-y-10; }
+        .intro-block { @apply space-y-4; }
+        .intro-grid { @apply grid grid-cols-1 md:grid-cols-2 print:grid-cols-2 gap-6 mt-8; }
+        .intro-item-card { @apply bg-slate-50 p-6 rounded-xl border border-slate-100 space-y-3; page-break-inside: avoid; }
+        .intro-item-title { @apply font-bold text-slate-800 text-lg flex items-center gap-2; }
+        .intro-item-desc { @apply text-slate-600 leading-relaxed text-sm; }
+        
+        /* 12. Utilities & State Classes */
+        .icon-sm { @apply w-4 h-4; }
+        .icon-md { @apply w-5 h-5; }
+        .icon-blue { @apply text-blue-500; }
+        .icon-emerald { @apply text-emerald-500; }
+        .icon-amber { @apply text-amber-500; }
+        .nav-label { @apply hidden md:inline; }
+        .contact-link-active { @apply text-white font-bold !important; }
+        .btn-nav-active { @apply border-blue-500 text-blue-600 !important; }
+        .nav-row { @apply flex flex-wrap gap-x-5 gap-y-2; }
+        .icon-wrapper { @apply inline-flex items-center justify-center; }
+
+        /* 13. Print Settings */
+        @page { size: auto; margin: 1cm 0; }
+        @page :first { margin-top: 0; }
+        @media print {
+            html, body { @apply bg-white p-0 m-0 h-auto; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .no-print { @apply hidden !important; }
+            .print-break-inside-avoid { page-break-inside: avoid; }
+            .main-card { @apply shadow-none border-none mx-auto rounded-none bg-transparent !important; width: 1024px !important; }
+            .resume-header { @apply py-4 px-12 border-none rounded-none mt-0 !important; }
+            .resume-header > div { @apply flex-row items-start !important; }
+            .resume-name { @apply mt-8 !important; font-size: 3.5rem !important; }
+            .content-area { @apply p-12 space-y-12; }
+            .footer-quote { @apply mb-6 !important; }
+            .exp-header { @apply flex-row items-start justify-between !important; }
+            .career-company-header { @apply static bg-transparent border-slate-200 mb-6 py-2 flex-row items-baseline justify-between !important; }
+            .career-section-title { @apply text-2xl !important; }
+            .skills-grid { @apply grid-cols-3 gap-4 !important; }
+            .edu-cert-grid { @apply grid-cols-2 gap-8 !important; }
+            .prev-exp-item { @apply flex-row justify-between items-center !important; }
+            .project-header { @apply flex-row items-baseline justify-between !important; }
+            .print-force-new-page { break-before: page !important; }
+            .print-force-new-page.career-company-section { margin-top: 0 !important; }
+            .intro-item, .intro-item-card { page-break-inside: avoid; }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        const CONFIG = {
+            BASE_URL: 'https://kookle000k.github.io/resume'
+        };
+
+        /* --- Components --- */
+
+        const NavLink = ({ targetView, currentView, setView, className, activeClass, children }) => (
+            <a
+                href={`${CONFIG.BASE_URL}?view=${targetView}`}
+                onClick={(e) => { e.preventDefault(); setView(targetView); }}
+                className={`${className} ${currentView === targetView ? activeClass : ''}`}
+            >
+                {children}
+            </a>
+        );
+
+        const Icon = ({ name, className = "icon-sm" }) => {
+            const spanRef = useRef(null);
+            useEffect(() => {
+                if (window.lucide && spanRef.current) {
+                    spanRef.current.innerHTML = `<i data-lucide="${name}" class="${className}"></i>`;
+                    window.lucide.createIcons();
+                }
+            }, [name]);
+            return <span ref={spanRef} className="icon-wrapper"></span>;
+        };
+
+        const Section = ({ title, children, className = "" }) => (
+            <section className={`section-container ${className}`}>
+                <h2 className="section-title">{title}</h2>
+                {children}
+            </section>
+        );
+
+        const Header = ({ profile, career, introduction, view, setView }) => (
+            <header className="resume-header">
+                <div className="header-container">
+                    <div>
+                        <h1 className="resume-name">{profile.name}</h1>
+                        <p className="resume-tagline" dangerouslySetInnerHTML={{ __html: view === 'resume' ? profile.tagline : view === 'career' ? career.tagline : introduction.tagline }} />
+                    </div>
+                    <div className="contact-info">
+                        <div className="contact-group">
+                            <div className="contact-item"><Icon name="user" className="contact-icon-v" /> <span>{profile.birth}</span></div>
+                            <div className="contact-item"><Icon name="mail" className="contact-icon-v" /> <span>{profile.email}</span></div>
+                            <div className="contact-item"><Icon name="phone" className="contact-icon-v" /> <span>{profile.phone}</span></div>
+                        </div>
+                        <div className="link-group">
+                            <NavLink targetView="resume" currentView={view} setView={setView} className="contact-link" activeClass="contact-link-active">
+                                <Icon name="user" className="contact-icon-v" />
+                                <span>이력서</span>
+                            </NavLink>
+                            <NavLink targetView="career" currentView={view} setView={setView} className="contact-link" activeClass="contact-link-active">
+                                <Icon name="file-text" className="contact-icon-v" />
+                                <span>경력기술서</span>
+                            </NavLink>
+                            <NavLink targetView="intro" currentView={view} setView={setView} className="contact-link" activeClass="contact-link-active">
+                                <Icon name="pen-tool" className="contact-icon-v" />
+                                <span>자기소개서</span>
+                            </NavLink>
+                            <a href={profile.portfolio} target="_blank" rel="noopener noreferrer" className="contact-link">
+                                <Icon name="link" className="contact-icon-v" /> <span>포트폴리오</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+        );
+
+        const Footer = ({ name }) => (
+            <footer className="footer-action">
+                <p className="footer-quote">"기술은 사람을 향할 때 비로소 완성됩니다."</p>
+                <div className="print-info-container">
+                    <div className="print-info-text">
+                        <p className="print-notice-title">Notice</p>
+                        <p>이 페이지는 HTML을 통해 PDF로 생성되었습니다.</p>
+                        <p>원본: <a href={`${CONFIG.BASE_URL}/`} className="print-link">{CONFIG.BASE_URL}/</a></p>
+                    </div>
+                    <div className="qr-code-box">
+                        <img src={`https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${CONFIG.BASE_URL}/`} alt="QR Code" className="qr-img" />
+                    </div>
+                </div>
+            </footer>
+        );
+
+        /* --- Views --- */
+
+        const ResumeView = ({ data }) => (
+            <div className="content-area">
+                <Section title="Summary">
+                    <div className="summary-content">{data.summary.map((text, i) => <p key={i} dangerouslySetInnerHTML={{ __html: text }} />)}</div>
+                </Section>
+                <Section title="Core Skills">
+                    <div className="skills-grid">
+                        {data.skills.map((skill, i) => (
+                            <div key={i} className="skill-group">
+                                <h3 className="skill-cat-header"><Icon name={skill.icon} className={`icon-md ${i === 0 ? 'icon-blue' : i === 1 ? 'icon-emerald' : 'icon-amber'}`} /> {skill.category}</h3>
+                                <div className="skill-tag-container">{skill.items.map((item, j) => <span key={j} className="skill-tag">{item}</span>)}</div>
+                            </div>
+                        ))}
+                    </div>
+                </Section>
+                <Section title="Experience" className="print-force-new-page">
+                    <div className="exp-list">
+                        {data.experience.map((exp, i) => (
+                            <div key={i} className="exp-item print-break-inside-avoid">
+                                <div className="exp-dot"></div>
+                                <div className="exp-header">
+                                    <div><h3 className="exp-company">{exp.company}</h3><p className="exp-role">{exp.role}</p></div>
+                                    <span className={`exp-period ${exp.isCurrent ? "current" : "past"}`}>{exp.period}</span>
+                                </div>
+                                <ul className="exp-details-list">{exp.details.map((detail, j) => <li key={j} className="exp-detail-item"><span className="exp-check-icon">✓</span><span dangerouslySetInnerHTML={{ __html: detail }} /></li>)}</ul>
+                            </div>
+                        ))}
+                        <div className="prev-exp-card print-break-inside-avoid">
+                            <h3 className="prev-exp-title">
+                                <Icon name="history" className="prev-exp-icon" /> Previous Experiences
+                            </h3>
+                            <div className="prev-exp-list">
+                                {data.previousCareers.map((item, i) => (
+                                    <div key={i} className="prev-exp-item">
+                                        <span className="prev-exp-info">
+                                            <strong className="prev-exp-company">{item.company.split(' (')[0]}</strong>
+                                            {item.company.includes('(') ? (
+                                                <span className="prev-exp-detail">
+                                                    ({item.company.split(' (')[1] || ''}
+                                                </span>
+                                            ) : ''}
+                                        </span>
+                                        <span className="prev-exp-period">{item.period}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </Section>
+                <div className="edu-cert-grid print-force-new-page">
+                    <Section title="Education"><div className="edu-list">{data.education.map((edu, i) => <div key={i} className="edu-item"><span className="edu-school">{edu.school}</span><span className="edu-major">{edu.major}</span></div>)}</div></Section>
+                    <Section title="Certificates"><div className="cert-container">{data.certificates.map((cert, i) => <span key={i} className="cert-tag">{cert}</span>)}</div></Section>
+                </div>
+            </div>
+        );
+
+        const CareerView = ({ data }) => (
+            <div className="content-area">
+                {data.companies.map((company, i) => (
+                    <section key={i} className={`career-company-section ${company.forceNewPage ? 'print-force-new-page' : ''}`}>
+                        <div className="career-company-header"><h3 className="career-section-title">{company.name}</h3><span className="career-company-period">{company.period}</span></div>
+                        <div className="career-projects">{company.projects.map((project, j) => (
+                            <div key={j} className={`project-item ${project.forceNewPage ? 'print-force-new-page' : ''}`}>
+                                <div className="project-header">
+                                    <h4 className="project-title">{project.title}</h4>
+                                    <span className="project-role">{project.role}</span>
+                                </div>
+                                <div className="project-tech-container">{project.tech.map((t, k) => <span key={k} className="project-tech-tag">{t}</span>)}</div>
+                                <p className="project-description">{project.description}</p>
+                                <div className="project-results">{project.results.map((r, k) => <div key={k} className="result-item"><span className="result-bullet">✓</span><span>{r}</span></div>)}</div>
+                            </div>
+                        ))}</div>
+                    </section>
+                ))}
+            </div>
+        );
+
+        const IntroView = ({ data }) => (
+            <div className="content-area">
+                {data.map((section, i) => (
+                    <Section key={i} title={section.title} className="intro-item">
+                        <div className="intro-body">
+                            {(section.blocks || [{ subtitle: section.subtitle, content: section.content }]).map((block, k) => (
+                                <div key={k} className="intro-block">
+                                    {block.subtitle && <h3 className="intro-subtitle">{block.subtitle}</h3>}
+                                    {block.content && <p className="intro-text" dangerouslySetInnerHTML={{ __html: block.content }} />}
+                                </div>
+                            ))}
+                            {section.items && (
+                                <div className="intro-grid">
+                                    {section.items.map((item, j) => (
+                                        <div key={j} className="intro-item-card">
+                                            <h4 className="intro-item-title">
+                                                <Icon name="check-circle-2" className="icon-blue icon-md" />
+                                                {item.title}
+                                            </h4>
+                                            <p className="intro-item-desc">{item.description}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </Section>
+                ))}
+            </div>
+        );
+
+        /* --- Main App Wrapper --- */
+
+        const MainApp = () => {
+            const [view, setView] = useState(() => {
+                const params = new URLSearchParams(window.location.search);
+                const v = params.get('view');
+                if (['resume', 'career', 'intro'].includes(v)) return v;
+                return 'resume';
+            });
+            const data = window.RESUME_DATA;
+
+            useEffect(() => {
+                const url = new URL(window.location);
+                if (view !== 'resume' || url.searchParams.has('view')) {
+                    url.searchParams.set('view', view);
+                    window.history.replaceState({}, '', url);
+                }
+            }, [view]);
+
+            useEffect(() => {
+                const titles = {
+                    resume: '이력서',
+                    career: '경력기술서',
+                    intro: '자기소개서'
+                };
+                document.title = `김창현 | ${titles[view]}`;
+                window.scrollTo(0, 0);
+            }, [view]);
+
+            if (!data) return (
+                <div className="main-card status-screen">
+                    <Icon name="alert-circle" className="status-icon" />
+                    <p className="status-text-error">데이터 로드 실패</p>
+                    <p className="status-text-desc">data.js 파일을 찾을 수 없습니다. HTML과 같은 폴더에 있는지 확인해 주세요.</p>
+                </div>
+            );
+
+            return (
+                <div className="main-card">
+                    <Header profile={data.profile} career={data.career} introduction={data.introduction} view={view} setView={setView} />
+                    <main>
+                        {view === 'resume' && <ResumeView data={data.resume} />}
+                        {view === 'career' && <CareerView data={data.career} />}
+                        {view === 'intro' && <IntroView data={data.introduction.sections} />}
+                    </main>
+                    <Footer name={data.profile.name} />
+                    <nav className="nav-actions">
+                        <NavLink targetView="resume" currentView={view} setView={setView} className="btn-nav" activeClass="btn-nav-active">
+                            <Icon name="user" /> <span className="nav-label">이력서</span>
+                        </NavLink>
+                        <NavLink targetView="career" currentView={view} setView={setView} className="btn-nav" activeClass="btn-nav-active">
+                            <Icon name="file-text" /> <span className="nav-label">경력기술서</span>
+                        </NavLink>
+                        <NavLink targetView="intro" currentView={view} setView={setView} className="btn-nav" activeClass="btn-nav-active">
+                            <Icon name="pen-tool" /> <span className="nav-label">자기소개서</span>
+                        </NavLink>
+                        <button onClick={() => window.print()} className="btn-nav-primary">
+                            <Icon name="printer" /> <span className="nav-label">인쇄</span>
+                        </button>
+                    </nav>
+                    <footer className="footer-copyright no-print">© 2026 {data.profile.name}. All rights reserved.</footer>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<MainApp />);
+    </script>
+</body>
+
+</html>
