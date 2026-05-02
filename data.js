@@ -307,7 +307,7 @@ window.RESUME_DATA = {
             }, {
                 "forceNewPage": true,
                 "name": "자유 프로젝트",
-                "period": "2011.01 — 2026.04",
+                "period": "2011.01 — 현재",
                 "projects": [
                     {
                         "title": "SASM 기반 홈 네트워크 기기 통합 대시보드 및 자동화 개발",
