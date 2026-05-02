@@ -27,7 +27,7 @@ window.RESUME_DATA = {
             {
                 "company": "에프에스엔",
                 "role": "[팀장] 업무 자동화, 광고 시스템 고도화",
-                "period": "2022.08 — 현재",
+                "period": "2022.08 — 2026.04",
                 "isCurrent": true,
                 "details": [
                     "<strong>업무 자동화 체계 구축</strong><br />n8n을 활용한 자동화 워크플로우 설계로 단순 반복 업무 공수를 주당 2~4시간 절감하고 생산성을 극대화",
@@ -63,7 +63,7 @@ window.RESUME_DATA = {
         "companies": [
             {
                 "name": "에프에스엔",
-                "period": "2022.08 — 현재",
+                "period": "2022.08 — 2026.04",
                 "projects": [
                     {
                         "title": "업무 자동화 체계 구축",
@@ -307,7 +307,7 @@ window.RESUME_DATA = {
             }, {
                 "forceNewPage": true,
                 "name": "자유 프로젝트",
-                "period": "2011.01 — 현재",
+                "period": "2011.01 — 2026.04",
                 "projects": [
                     {
                         "title": "SASM 기반 홈 네트워크 기기 통합 대시보드 및 자동화 개발",
